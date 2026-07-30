@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "GOOD DOG — Built Different",
   description:
-    "A playful 3D hot dog builder. Pick a link, draw the sauce, add the crunch.",
+    "A playful hot dog builder and demo ordering experience. Pick a link, add the sauce, choose the crunch.",
   icons: {
     icon: "/icon.png",
     apple: "/icon.png",

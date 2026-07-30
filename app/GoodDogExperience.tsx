@@ -3,6 +3,7 @@
 import {
   lazy,
   Suspense,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -13,12 +14,13 @@ import type {
   LinkKind,
   SauceKind,
 } from "./ExperienceCanvas";
-import { SauceScrollStage } from "./SauceScrollStage";
+import { KitchenCutStage } from "./KitchenCutStage";
+import { OrderDrawer, type OrderItem } from "./OrderDrawer";
 import { SmoothScroll } from "./SmoothScroll";
 
 const ExperienceCanvas = lazy(async () => {
-  const module = await import("./ExperienceCanvas");
-  return { default: module.ExperienceCanvas };
+  const experienceModule = await import("./ExperienceCanvas");
+  return { default: experienceModule.ExperienceCanvas };
 });
 
 const links: Array<{
@@ -73,7 +75,11 @@ export function GoodDogExperience() {
   const [link, setLink] = useState<LinkKind>("classic");
   const [sauce, setSauce] = useState<SauceKind>("ketchup");
   const [crunch, setCrunch] = useState<CrunchKind>("none");
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartItem, setCartItem] = useState<OrderItem | null>(null);
+  const [cartQuantity, setCartQuantity] = useState(0);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const cartButtonRef = useRef<HTMLButtonElement>(null);
   const closeMenuRef = useRef<HTMLButtonElement>(null);
 
   const linkIndex = links.findIndex((item) => item.id === link);
@@ -85,6 +91,14 @@ export function GoodDogExperience() {
       }`,
     [activeLink, sauce, crunch],
   );
+  const recipePrice = useMemo(() => {
+    const linkPrice: Record<LinkKind, number> = {
+      classic: 12,
+      smoked: 14,
+      plant: 13,
+    };
+    return linkPrice[link] + (crunch === "none" ? 0 : 1);
+  }, [crunch, link]);
 
   useEffect(() => {
     if (!introOpen) return;
@@ -148,6 +162,56 @@ export function GoodDogExperience() {
     menuButtonRef.current?.focus();
   };
 
+  const closeCart = useCallback(() => {
+    setCartOpen(false);
+    window.setTimeout(() => cartButtonRef.current?.focus(), 0);
+  }, []);
+
+  const openCart = useCallback(() => {
+    setMenuOpen(false);
+    setCartOpen(true);
+  }, []);
+
+  const addItemToBag = (item: OrderItem) => {
+    setCartQuantity((current) =>
+      cartItem?.summary === item.summary ? Math.min(9, current + 1) : 1,
+    );
+    setCartItem(item);
+    setBuilderOpen(false);
+    setMenuOpen(false);
+    setCartOpen(true);
+  };
+
+  const addCurrentToBag = () => {
+    addItemToBag({
+      name: activeLink.name.toUpperCase(),
+      summary: recipeSummary,
+      unitPrice: recipePrice,
+    });
+  };
+
+  const addClassicToBag = () => {
+    setLink("classic");
+    setSauce("ketchup");
+    setCrunch("none");
+    addItemToBag({
+      name: "THE CLASSIC",
+      summary: "Classic link, ketchup, no crunch",
+      unitPrice: 12,
+    });
+  };
+
+  const buildFromCart = () => {
+    setCartOpen(false);
+    openBuilder();
+  };
+
+  const completeOrder = () => {
+    setCartItem(null);
+    setCartQuantity(0);
+    setCartOpen(false);
+  };
+
   return (
     <main>
       <SmoothScroll />
@@ -193,20 +257,34 @@ export function GoodDogExperience() {
           <a className="brand-logo" href="#top" aria-label="GOOD DOG home">
             <img src="/brand/good-dog-logo.png" alt="GOOD DOG" />
           </a>
-          <button
-            ref={menuButtonRef}
-            className="menu-trigger"
-            type="button"
-            aria-expanded={menuOpen}
-            aria-controls="site-menu"
-            onClick={() => setMenuOpen(true)}
-          >
-            <span>MENU</span>
-            <span className="menu-glyph" aria-hidden="true">
-              <i />
-              <i />
-            </span>
-          </button>
+          <div className="top-actions">
+            <button
+              ref={cartButtonRef}
+              className="cart-trigger"
+              type="button"
+              aria-haspopup="dialog"
+              onClick={openCart}
+            >
+              BAG <span>({cartItem ? cartQuantity : 0})</span>
+            </button>
+            <button
+              ref={menuButtonRef}
+              className="menu-trigger"
+              type="button"
+              aria-expanded={menuOpen}
+              aria-controls="site-menu"
+              onClick={() => {
+                setCartOpen(false);
+                setMenuOpen(true);
+              }}
+            >
+              <span>MENU</span>
+              <span className="menu-glyph" aria-hidden="true">
+                <i />
+                <i />
+              </span>
+            </button>
+          </div>
         </header>
 
         <h1 className="hero-title" aria-label="Built different">
@@ -368,6 +446,16 @@ export function GoodDogExperience() {
               </button>
             ))}
           </fieldset>
+
+          <button
+            className="builder-add"
+            type="button"
+            onClick={addCurrentToBag}
+            tabIndex={builderOpen ? 0 : -1}
+          >
+            <span>ADD TO BAG</span>
+            <strong>${recipePrice}</strong>
+          </button>
         </aside>
 
         <div className="hero-meta" aria-hidden="true">
@@ -394,7 +482,7 @@ export function GoodDogExperience() {
         </div>
       </section>
 
-      <SauceScrollStage />
+      <KitchenCutStage onOrder={addClassicToBag} />
 
       <section id="signatures" className="signatures section-pad">
         <div className="section-intro">
@@ -528,7 +616,7 @@ export function GoodDogExperience() {
         <p className="eyebrow light">ENOUGH LOOKING</p>
         <h2>YOUR MOVE.</h2>
         <button className="primary-button cream" type="button" onClick={openBuilder}>
-          <span>BUILD A GOOD DOG</span>
+          <span>ORDER A GOOD DOG</span>
           <span aria-hidden="true">↗</span>
         </button>
       </section>
@@ -548,6 +636,17 @@ export function GoodDogExperience() {
         </a>
         <a href="#top">BACK TO TOP ↑</a>
       </footer>
+
+      {cartOpen ? (
+        <OrderDrawer
+          item={cartItem}
+          quantity={cartQuantity}
+          onQuantityChange={setCartQuantity}
+          onClose={closeCart}
+          onBuild={buildFromCart}
+          onComplete={completeOrder}
+        />
+      ) : null}
 
       <div
         id="site-menu"
@@ -572,7 +671,7 @@ export function GoodDogExperience() {
         <nav aria-label="Main navigation">
           {[
             ["01", "BUILD", "#top"],
-            ["02", "SAUCE", "#sauce"],
+            ["02", "KITCHEN CUT", "#kitchen-cut"],
             ["03", "SIGNATURES", "#signatures"],
             ["04", "INGREDIENTS", "#ingredients"],
             ["05", "STORY", "#story"],
