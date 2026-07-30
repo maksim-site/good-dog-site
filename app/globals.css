@@ -2723,11 +2723,31 @@ footer > a:last-child {
   }
 
   .hero-spec {
-    display: none;
+    top: auto;
+    bottom: max(29px, env(safe-area-inset-bottom));
+    left: clamp(124px, 21vw, 160px);
+    display: grid;
+    grid-template-columns: auto 30px auto;
+    gap: 9px;
+  }
+
+  .hero-spec strong {
+    font-size: clamp(1.7rem, 5vw, 2.1rem);
+  }
+
+  .hero-spec i {
+    width: 30px;
+  }
+
+  .hero-spec span {
+    font-size: 6px;
   }
 
   .hero-mascot {
-    display: none;
+    bottom: 2px;
+    left: 17px;
+    display: block;
+    width: clamp(76px, 14vw, 98px);
   }
 
   .hero-steam {
@@ -2751,8 +2771,13 @@ footer > a:last-child {
 
   .hero-action {
     right: 19px;
-    bottom: max(24px, env(safe-area-inset-bottom));
-    left: 19px;
+    bottom: max(20px, env(safe-area-inset-bottom));
+    left: auto;
+    gap: 9px;
+  }
+
+  .hero-action .primary-button {
+    width: clamp(190px, 34vw, 230px);
   }
 
   .primary-button {
@@ -2946,6 +2971,19 @@ footer > a:last-child {
   }
 }
 
+@media (max-width: 480px) {
+  .hero-spec {
+    bottom: max(27px, env(safe-area-inset-bottom));
+    left: 104px;
+    grid-template-columns: auto;
+  }
+
+  .hero-spec i,
+  .hero-spec span {
+    display: none;
+  }
+}
+
 @media (max-width: 390px) {
   .hero-title {
     font-size: 21vw;
@@ -2965,6 +3003,25 @@ footer > a:last-child {
 
   .control-group button {
     padding: 0 10px;
+  }
+
+  .hero-mascot {
+    left: 14px;
+    width: 72px;
+  }
+
+  .hero-spec {
+    bottom: max(27px, env(safe-area-inset-bottom));
+    left: 102px;
+  }
+
+  .hero-action {
+    right: 14px;
+    bottom: max(15px, env(safe-area-inset-bottom));
+  }
+
+  .hero-action .primary-button {
+    width: 184px;
   }
 }
 
