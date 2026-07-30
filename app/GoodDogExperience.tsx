@@ -314,7 +314,7 @@ export function GoodDogExperience() {
             onClick={() => setBuilderOpen(true)}
           >
             <span>BUILD YOURS</span>
-            <span aria-hidden="true">↗</span>
+            <span aria-hidden="true">↗︎</span>
           </button>
         </div>
 
@@ -462,7 +462,7 @@ export function GoodDogExperience() {
               <span className="signature-name">{signature.name}</span>
               <span className="signature-line">{signature.line}</span>
               <span className="signature-arrow" aria-hidden="true">
-                ↗
+                ↗︎
               </span>
             </button>
           ))}
@@ -550,7 +550,14 @@ export function GoodDogExperience() {
       <section id="ingredients" className="kitchen section-pad">
         <div className="kitchen-copy">
           <p className="eyebrow light">THE SERIOUS BIT</p>
-          <h2>HOT. HONEST. A LITTLE OVER-ENGINEERED.</h2>
+          <h2>
+            <span className="kitchen-title-line">HOT. HONEST.</span>{" "}
+            <span className="kitchen-title-line">A LITTLE</span>{" "}
+            <span className="kitchen-title-line kitchen-title-engineered">
+              <span>OVER-</span>
+              <span>ENGINEERED.</span>
+            </span>
+          </h2>
           <p>
             A soft brioche shell, a link with proper snap, raised sauce geometry
             and exactly enough crunch to make the whole thing make sense.
@@ -575,10 +582,13 @@ export function GoodDogExperience() {
 
       <section id="build" className="final-build section-pad">
         <p className="eyebrow light">ENOUGH LOOKING</p>
-        <h2>YOUR MOVE.</h2>
+        <h2>
+          <span>YOUR</span>{" "}
+          <span>MOVE.</span>
+        </h2>
         <button className="primary-button cream" type="button" onClick={openBuilder}>
           <span>ORDER A GOOD DOG</span>
-          <span aria-hidden="true">↗</span>
+          <span aria-hidden="true">↗︎</span>
         </button>
       </section>
 
@@ -593,7 +603,7 @@ export function GoodDogExperience() {
           rel="noopener noreferrer"
         >
           <span>DESIGNED &amp; BUILT BY MAKSIM</span>
-          <small>MAKSIM-SITE.RU ↗</small>
+          <small>MAKSIM-SITE.RU ↗︎</small>
         </a>
         <a href="#top">BACK TO TOP ↑</a>
       </footer>
@@ -647,7 +657,7 @@ export function GoodDogExperience() {
             >
               <span>{number}</span>
               {label}
-              <i aria-hidden="true">↗</i>
+              <i aria-hidden="true">↗︎</i>
             </a>
           ))}
         </nav>

@@ -181,7 +181,7 @@ export function OrderDrawer({
             <p>Build one first. We&apos;ll keep the imaginary grill hot.</p>
             <button className="primary-button" type="button" onClick={onBuild}>
               <span>BUILD A GOOD DOG</span>
-              <span aria-hidden="true">↗</span>
+              <span aria-hidden="true">↗︎</span>
             </button>
           </div>
         ) : step === "cart" ? (
@@ -380,7 +380,7 @@ export function OrderDrawer({
                     ? "ENGINEERING YOUR DOG…"
                     : `PLACE DEMO ORDER — ${formatMoney(total)}`}
                 </span>
-                <span aria-hidden="true">{submitting ? "…" : "↗"}</span>
+                <span aria-hidden="true">{submitting ? "…" : "↗︎"}</span>
               </button>
               <p>DEMO ONLY — NO PAYMENT OR REAL DELIVERY.</p>
             </div>

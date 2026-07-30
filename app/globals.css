@@ -2978,24 +2978,62 @@ footer > a:last-child {
     bottom: max(13px, env(safe-area-inset-bottom));
     left: 13px;
     width: auto;
-    border-radius: 20px;
-    padding: 16px;
+    max-height: min(390px, 44svh);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-radius: 18px;
+    padding: 13px 14px;
+    scrollbar-width: none;
+  }
+
+  .builder-panel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .builder-head {
+    align-items: center;
+    padding-bottom: 10px;
+  }
+
+  .builder-summary {
+    margin-top: 3px;
+    font-size: 11px;
+    line-height: 1.28;
+  }
+
+  .builder-panel .icon-button,
+  .builder-panel .arrow-button {
+    width: 38px;
+    height: 38px;
+    font-size: 18px;
   }
 
   .builder-add {
-    min-height: 46px;
+    min-height: 42px;
+    margin-top: 10px;
   }
 
   .link-row {
-    grid-template-columns: 18px 44px 1fr 44px;
+    grid-template-columns: 16px 38px 1fr 38px;
+    padding: 8px 0;
   }
 
   .control-group {
     overflow-x: auto;
+    gap: 5px;
+    padding: 7px 0;
   }
 
   .control-group legend {
-    min-width: 56px;
+    width: 48px;
+    min-width: 48px;
+    padding-top: 9px;
+  }
+
+  .control-group button {
+    min-height: 32px;
+    padding: 0 11px;
+    font-size: 9px;
   }
 
   .drag-hint {
@@ -3012,18 +3050,23 @@ footer > a:last-child {
   }
 
   .manifesto h2 {
-    margin-top: 14vh;
-    font-size: clamp(3.9rem, 18vw, 6.6rem);
+    max-width: 100%;
+    margin-top: clamp(68px, 10svh, 92px);
+    font-size: clamp(2.25rem, 11.6vw, 3.6rem);
+    letter-spacing: -0.065em;
+    line-height: 0.88;
+    word-spacing: 0.06em;
+    white-space: nowrap;
   }
 
   .ingredient-orbit {
     top: auto;
     right: 0;
-    bottom: 0;
+    bottom: -2%;
     width: 100%;
-    height: 34%;
-    font-size: 2.2rem;
-    opacity: 0.68;
+    height: 30%;
+    font-size: clamp(1.55rem, 7.5vw, 2.2rem);
+    opacity: 0.62;
   }
 
   .section-intro h2 {
@@ -3059,7 +3102,19 @@ footer > a:last-child {
   }
 
   .kitchen-copy h2 {
-    font-size: clamp(3.3rem, 16vw, 5rem);
+    max-width: 100%;
+    font-size: clamp(2.7rem, 13vw, 4.2rem);
+    letter-spacing: -0.07em;
+    line-height: 0.87;
+  }
+
+  .kitchen-title-line,
+  .kitchen-title-engineered > span {
+    display: block;
+  }
+
+  .kitchen-copy > p:not(.eyebrow) {
+    max-width: 34ch;
   }
 
   .kitchen-visual {
@@ -3082,8 +3137,22 @@ footer > a:last-child {
   }
 
   .final-build h2 {
-    margin-bottom: 42px;
-    font-size: clamp(6.4rem, 30vw, 9rem);
+    width: 100%;
+    max-width: calc(100vw - 38px);
+    margin-bottom: 38px;
+    font-size: clamp(5rem, 24vw, 7.3rem);
+    letter-spacing: -0.075em;
+    line-height: 0.76;
+  }
+
+  .final-build h2 > span {
+    display: block;
+  }
+
+  .final-build .primary-button {
+    width: min(280px, calc(100vw - 38px));
+    min-height: 56px;
+    gap: 24px;
   }
 
   footer {
