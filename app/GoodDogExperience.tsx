@@ -13,6 +13,8 @@ import type {
   LinkKind,
   SauceKind,
 } from "./ExperienceCanvas";
+import { SauceScrollStage } from "./SauceScrollStage";
+import { SmoothScroll } from "./SmoothScroll";
 
 const ExperienceCanvas = lazy(async () => {
   const module = await import("./ExperienceCanvas");
@@ -148,6 +150,7 @@ export function GoodDogExperience() {
 
   return (
     <main>
+      <SmoothScroll />
       <div
         className={`intro-loader ${
           introOpen ? "is-playing" : "is-complete"
@@ -391,6 +394,8 @@ export function GoodDogExperience() {
         </div>
       </section>
 
+      <SauceScrollStage />
+
       <section id="signatures" className="signatures section-pad">
         <div className="section-intro">
           <p className="eyebrow">HOUSE DOGS</p>
@@ -567,9 +572,10 @@ export function GoodDogExperience() {
         <nav aria-label="Main navigation">
           {[
             ["01", "BUILD", "#top"],
-            ["02", "SIGNATURES", "#signatures"],
-            ["03", "INGREDIENTS", "#ingredients"],
-            ["04", "STORY", "#story"],
+            ["02", "SAUCE", "#sauce"],
+            ["03", "SIGNATURES", "#signatures"],
+            ["04", "INGREDIENTS", "#ingredients"],
+            ["05", "STORY", "#story"],
           ].map(([number, label, href]) => (
             <a
               key={href}
