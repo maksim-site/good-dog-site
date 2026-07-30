@@ -1,27 +1,16 @@
 "use client";
 
 import {
-  lazy,
-  Suspense,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
-import type {
-  CrunchKind,
-  LinkKind,
-  SauceKind,
-} from "./ExperienceCanvas";
-import { KitchenCutStage } from "./KitchenCutStage";
+import { BuilderProductMedia } from "./BuilderProductMedia";
 import { OrderDrawer, type OrderItem } from "./OrderDrawer";
+import type { CrunchKind, LinkKind, SauceKind } from "./product-types";
 import { SmoothScroll } from "./SmoothScroll";
-
-const ExperienceCanvas = lazy(async () => {
-  const experienceModule = await import("./ExperienceCanvas");
-  return { default: experienceModule.ExperienceCanvas };
-});
 
 const links: Array<{
   id: LinkKind;
@@ -71,7 +60,6 @@ export function GoodDogExperience() {
   const [introOpen, setIntroOpen] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [builderOpen, setBuilderOpen] = useState(false);
-  const [modelReady, setModelReady] = useState(false);
   const [link, setLink] = useState<LinkKind>("classic");
   const [sauce, setSauce] = useState<SauceKind>("ketchup");
   const [crunch, setCrunch] = useState<CrunchKind>("none");
@@ -145,7 +133,6 @@ export function GoodDogExperience() {
   };
 
   const openBuilder = () => {
-    setModelReady(false);
     setBuilderOpen(true);
     document.getElementById("top")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -187,17 +174,6 @@ export function GoodDogExperience() {
       name: activeLink.name.toUpperCase(),
       summary: recipeSummary,
       unitPrice: recipePrice,
-    });
-  };
-
-  const addClassicToBag = () => {
-    setLink("classic");
-    setSauce("ketchup");
-    setCrunch("none");
-    addItemToBag({
-      name: "THE CLASSIC",
-      summary: "Classic link, ketchup, no crunch",
-      unitPrice: 12,
     });
   };
 
@@ -310,31 +286,18 @@ export function GoodDogExperience() {
             <i />
           </div>
           <img
-            className={`hotdog-poster ${
-              builderOpen && modelReady ? "is-hidden" : ""
-            }`}
+            className={`hotdog-poster ${builderOpen ? "is-hidden" : ""}`}
             src="/images/hotdog-hero-v2.webp"
             alt=""
           />
           {builderOpen ? (
-            <Suspense fallback={null}>
-              <ExperienceCanvas
-                link={link}
-                sauce={sauce}
-                crunch={crunch}
-                paused={menuOpen}
-                builderOpen={builderOpen}
-                onReady={() => setModelReady(true)}
-              />
-            </Suspense>
+            <BuilderProductMedia
+              link={link}
+              sauce={sauce}
+              crunch={crunch}
+              paused={menuOpen}
+            />
           ) : null}
-          <p
-            className={`drag-hint ${
-              builderOpen && modelReady ? "is-visible" : ""
-            }`}
-          >
-            <span aria-hidden="true">↔</span> DRAG TO TURN
-          </p>
         </div>
 
         <div className="hero-mascot" aria-hidden="true">
@@ -481,8 +444,6 @@ export function GoodDogExperience() {
           <span>CRUNCH</span>
         </div>
       </section>
-
-      <KitchenCutStage onOrder={addClassicToBag} />
 
       <section id="signatures" className="signatures section-pad">
         <div className="section-intro">
@@ -671,10 +632,9 @@ export function GoodDogExperience() {
         <nav aria-label="Main navigation">
           {[
             ["01", "BUILD", "#top"],
-            ["02", "KITCHEN CUT", "#kitchen-cut"],
-            ["03", "SIGNATURES", "#signatures"],
-            ["04", "INGREDIENTS", "#ingredients"],
-            ["05", "STORY", "#story"],
+            ["02", "SIGNATURES", "#signatures"],
+            ["03", "INGREDIENTS", "#ingredients"],
+            ["04", "STORY", "#story"],
           ].map(([number, label, href]) => (
             <a
               key={href}
