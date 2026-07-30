@@ -7,7 +7,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { BuilderProductMedia } from "./BuilderProductMedia";
+import {
+  BuilderProductMedia,
+  builderImageSources,
+  getBuilderProductImages,
+} from "./BuilderProductMedia";
 import { OrderDrawer, type OrderItem } from "./OrderDrawer";
 import type { CrunchKind, LinkKind, SauceKind } from "./product-types";
 import { SmoothScroll } from "./SmoothScroll";
@@ -70,6 +74,25 @@ export function GoodDogExperience() {
   const cartButtonRef = useRef<HTMLButtonElement>(null);
   const closeMenuRef = useRef<HTMLButtonElement>(null);
 
+  useEffect(() => {
+    const preloadedImages: HTMLImageElement[] = [];
+    const timer = window.setTimeout(() => {
+      builderImageSources.forEach((source) => {
+        const image = new Image();
+        image.decoding = "async";
+        image.fetchPriority = "low";
+        image.src = source;
+        void image.decode().catch(() => undefined);
+        preloadedImages.push(image);
+      });
+    }, 250);
+
+    return () => {
+      window.clearTimeout(timer);
+      preloadedImages.length = 0;
+    };
+  }, []);
+
   const linkIndex = links.findIndex((item) => item.id === link);
   const activeLink = links[linkIndex];
   const recipeSummary = useMemo(
@@ -127,14 +150,53 @@ export function GoodDogExperience() {
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!builderOpen) return;
+
+    const scrollY = window.scrollY;
+    const previousBodyStyles = {
+      overflow: document.body.style.overflow,
+      position: document.body.style.position,
+      top: document.body.style.top,
+      right: document.body.style.right,
+      left: document.body.style.left,
+      width: document.body.style.width,
+      overscrollBehavior: document.body.style.overscrollBehavior,
+    };
+    const previousRootOverflow = document.documentElement.style.overflow;
+
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.right = "0";
+    document.body.style.left = "0";
+    document.body.style.width = "100%";
+    document.body.style.overscrollBehavior = "none";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousBodyStyles.overflow;
+      document.body.style.position = previousBodyStyles.position;
+      document.body.style.top = previousBodyStyles.top;
+      document.body.style.right = previousBodyStyles.right;
+      document.body.style.left = previousBodyStyles.left;
+      document.body.style.width = previousBodyStyles.width;
+      document.body.style.overscrollBehavior =
+        previousBodyStyles.overscrollBehavior;
+      document.documentElement.style.overflow = previousRootOverflow;
+      window.scrollTo(0, scrollY);
+    };
+  }, [builderOpen]);
+
   const moveLink = (direction: -1 | 1) => {
     const next = (linkIndex + direction + links.length) % links.length;
     setLink(links[next].id);
   };
 
   const openBuilder = () => {
+    window.__goodDogLenis?.scrollTo(0, { immediate: true });
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     setBuilderOpen(true);
-    document.getElementById("top")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const applySignature = (signature: (typeof signatures)[number]) => {
@@ -170,10 +232,13 @@ export function GoodDogExperience() {
   };
 
   const addCurrentToBag = () => {
+    const productImages = getBuilderProductImages(link, sauce, crunch);
     addItemToBag({
       name: activeLink.name.toUpperCase(),
       summary: recipeSummary,
       unitPrice: recipePrice,
+      imageSrc: productImages.product,
+      toppingSrc: productImages.topping,
     });
   };
 
@@ -311,7 +376,7 @@ export function GoodDogExperience() {
           <button
             className="primary-button"
             type="button"
-            onClick={() => setBuilderOpen(true)}
+            onClick={openBuilder}
           >
             <span>BUILD YOURS</span>
             <span aria-hidden="true">↗︎</span>

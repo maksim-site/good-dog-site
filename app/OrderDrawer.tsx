@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  FormEvent,
   MouseEvent as ReactMouseEvent,
   useEffect,
   useRef,
@@ -12,6 +11,8 @@ export type OrderItem = {
   name: string;
   summary: string;
   unitPrice: number;
+  imageSrc: string;
+  toppingSrc: string | null;
 };
 
 type OrderDrawerProps = {
@@ -23,9 +24,9 @@ type OrderDrawerProps = {
   onComplete: () => void;
 };
 
-type OrderStep = "cart" | "delivery" | "success";
-type DeliveryMethod = "delivery" | "pickup";
-type FieldErrors = Partial<Record<"name" | "phone" | "address", string>>;
+type OrderStep = "cart" | "success";
+
+const PACKING_DURATION = 3000;
 
 const formatMoney = (value: number) => `$${value.toFixed(0)}`;
 
@@ -39,20 +40,11 @@ export function OrderDrawer({
 }: OrderDrawerProps) {
   const drawerRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const submitTimerRef = useRef<number | null>(null);
-  const submittingRef = useRef(false);
+  const packingTimerRef = useRef<number | null>(null);
   const [step, setStep] = useState<OrderStep>("cart");
-  const [deliveryMethod, setDeliveryMethod] =
-    useState<DeliveryMethod>("delivery");
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [errors, setErrors] = useState<FieldErrors>({});
-  const [submitting, setSubmitting] = useState(false);
+  const [packing, setPacking] = useState(false);
 
-  const deliveryFee = deliveryMethod === "delivery" ? 3 : 0;
   const subtotal = item ? item.unitPrice * quantity : 0;
-  const total = subtotal + deliveryFee;
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -60,7 +52,7 @@ export function OrderDrawer({
     closeRef.current?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !submittingRef.current) {
+      if (event.key === "Escape") {
         onClose();
         return;
       }
@@ -91,57 +83,32 @@ export function OrderDrawer({
     window.addEventListener("keydown", onKeyDown);
 
     return () => {
-      if (submitTimerRef.current) {
-        window.clearTimeout(submitTimerRef.current);
+      if (packingTimerRef.current) {
+        window.clearTimeout(packingTimerRef.current);
       }
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [onClose]);
 
-  const validate = () => {
-    const nextErrors: FieldErrors = {};
-
-    if (name.trim().length < 2) {
-      nextErrors.name = "Tell us who gets the good dog.";
-    }
-
-    if (phone.replace(/\D/g, "").length < 7) {
-      nextErrors.phone = "Enter a phone number we could actually call.";
-    }
-
-    if (deliveryMethod === "delivery" && address.trim().length < 5) {
-      nextErrors.address = "Add a delivery address.";
-    }
-
-    setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
-  };
-
-  const placeOrder = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!validate()) return;
-
-    submittingRef.current = true;
-    setSubmitting(true);
-    submitTimerRef.current = window.setTimeout(() => {
-      submittingRef.current = false;
-      setSubmitting(false);
-      setStep("success");
-    }, 900);
-  };
-
   const stopPanelClick = (event: ReactMouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
+  };
+
+  const packAndOrder = () => {
+    if (packing) return;
+    setPacking(true);
+    packingTimerRef.current = window.setTimeout(() => {
+      setPacking(false);
+      setStep("success");
+    }, PACKING_DURATION);
   };
 
   return (
     <div
       className="order-overlay"
       role="presentation"
-      onMouseDown={() => {
-        if (!submitting) onClose();
-      }}
+      onMouseDown={onClose}
     >
       <div
         ref={drawerRef}
@@ -155,11 +122,7 @@ export function OrderDrawer({
           <div>
             <p className="eyebrow">GOOD DOG / DEMO ORDER</p>
             <h2 id="order-title">
-              {step === "cart"
-                ? "YOUR BAG."
-                : step === "delivery"
-                  ? "WHERE TO?"
-                  : "GOOD CALL."}
+              {step === "cart" ? "YOUR BAG." : "GOOD CALL."}
             </h2>
           </div>
           <button
@@ -168,7 +131,6 @@ export function OrderDrawer({
             type="button"
             onClick={onClose}
             aria-label="Close order"
-            disabled={submitting}
           >
             ×
           </button>
@@ -187,11 +149,41 @@ export function OrderDrawer({
         ) : step === "cart" ? (
           <>
             <div className="order-product">
-              <div className="order-product-image">
-                <img
-                  src="/images/hotdog-hero-v2.webp"
-                  alt="The selected GOOD DOG hot dog"
-                />
+              <div
+                className={`order-product-image ${
+                  packing ? "is-packing" : ""
+                }`}
+              >
+                <span className="order-wrap-sheet order-wrap-sheet-back" />
+                <div className="order-product-stack">
+                  <img
+                    src={item.imageSrc}
+                    alt="The selected GOOD DOG hot dog"
+                  />
+                  {item.toppingSrc ? (
+                    <img
+                      className="order-product-topping"
+                      src={item.toppingSrc}
+                      alt=""
+                    />
+                  ) : null}
+                </div>
+                <span className="order-wrap-fold order-wrap-fold-back" />
+                <span className="order-wrap-fold order-wrap-fold-front" />
+                <span className="order-wrap-crimp order-wrap-crimp-left">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <span className="order-wrap-crimp order-wrap-crimp-right">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <span className="order-wrap-sticker">
+                  <b>GOOD DOG</b>
+                  <small>SEALED HOT</small>
+                </span>
               </div>
               <div className="order-product-copy">
                 <p className="eyebrow">MADE AT 74°</p>
@@ -233,168 +225,35 @@ export function OrderDrawer({
               <button
                 className="primary-button order-main-button"
                 type="button"
-                onClick={() => setStep("delivery")}
+                onClick={packAndOrder}
+                disabled={packing}
               >
-                <span>CHOOSE DELIVERY</span>
-                <span aria-hidden="true">→</span>
+                <span>{packing ? "WRAPPING YOUR DOG…" : "ORDER THIS DOG"}</span>
+                <span aria-hidden="true">{packing ? "…" : "→"}</span>
               </button>
               <p>DEMO CHECKOUT — NO PAYMENT WILL BE TAKEN.</p>
             </div>
           </>
-        ) : step === "delivery" ? (
-          <form className="delivery-form" onSubmit={placeOrder} noValidate>
-            <button
-              className="order-back"
-              type="button"
-              onClick={() => setStep("cart")}
-              disabled={submitting}
-            >
-              ← BACK TO BAG
-            </button>
-
-            <fieldset className="delivery-switch">
-              <legend>HOW DO YOU WANT IT?</legend>
-              <button
-                type="button"
-                className={
-                  deliveryMethod === "delivery" ? "is-selected" : ""
-                }
-                onClick={() => setDeliveryMethod("delivery")}
-                aria-pressed={deliveryMethod === "delivery"}
-              >
-                DELIVERY <span>+$3</span>
-              </button>
-              <button
-                type="button"
-                className={deliveryMethod === "pickup" ? "is-selected" : ""}
-                onClick={() => setDeliveryMethod("pickup")}
-                aria-pressed={deliveryMethod === "pickup"}
-              >
-                PICKUP <span>FREE</span>
-              </button>
-            </fieldset>
-
-            <label className="order-field">
-              <span>NAME</span>
-              <input
-                type="text"
-                autoComplete="name"
-                value={name}
-                onChange={(event) => {
-                  setName(event.target.value);
-                  setErrors((current) => ({ ...current, name: undefined }));
-                }}
-                aria-invalid={Boolean(errors.name)}
-                aria-describedby={errors.name ? "order-name-error" : undefined}
-              />
-              {errors.name ? (
-                <small id="order-name-error" role="alert">
-                  {errors.name}
-                </small>
-              ) : null}
-            </label>
-
-            <label className="order-field">
-              <span>PHONE</span>
-              <input
-                type="tel"
-                inputMode="tel"
-                autoComplete="tel"
-                value={phone}
-                onChange={(event) => {
-                  setPhone(event.target.value);
-                  setErrors((current) => ({ ...current, phone: undefined }));
-                }}
-                aria-invalid={Boolean(errors.phone)}
-                aria-describedby={
-                  errors.phone ? "order-phone-error" : undefined
-                }
-              />
-              {errors.phone ? (
-                <small id="order-phone-error" role="alert">
-                  {errors.phone}
-                </small>
-              ) : null}
-            </label>
-
-            {deliveryMethod === "delivery" ? (
-              <label className="order-field">
-                <span>DELIVERY ADDRESS</span>
-                <input
-                  type="text"
-                  autoComplete="street-address"
-                  value={address}
-                  onChange={(event) => {
-                    setAddress(event.target.value);
-                    setErrors((current) => ({
-                      ...current,
-                      address: undefined,
-                    }));
-                  }}
-                  aria-invalid={Boolean(errors.address)}
-                  aria-describedby={
-                    errors.address ? "order-address-error" : undefined
-                  }
-                />
-                {errors.address ? (
-                  <small id="order-address-error" role="alert">
-                    {errors.address}
-                  </small>
-                ) : null}
-              </label>
-            ) : (
-              <div className="pickup-point">
-                <span className="eyebrow">PICKUP POINT</span>
-                <strong>74 BUN STREET / COUNTER 01</strong>
-                <small>READY IN ABOUT 12 MINUTES</small>
-              </div>
-            )}
-
-            <div className="delivery-summary">
-              <p>
-                <span>{quantity} × {item.name}</span>
-                <strong>{formatMoney(subtotal)}</strong>
-              </p>
-              <p>
-                <span>
-                  {deliveryMethod === "delivery" ? "DELIVERY" : "PICKUP"}
-                </span>
-                <strong>
-                  {deliveryFee ? formatMoney(deliveryFee) : "FREE"}
-                </strong>
-              </p>
-              <p>
-                <span>TOTAL</span>
-                <strong>{formatMoney(total)}</strong>
-              </p>
-            </div>
-
-            <div className="order-drawer-action">
-              <button
-                className="primary-button order-main-button"
-                type="submit"
-                disabled={submitting}
-              >
-                <span>
-                  {submitting
-                    ? "ENGINEERING YOUR DOG…"
-                    : `PLACE DEMO ORDER — ${formatMoney(total)}`}
-                </span>
-                <span aria-hidden="true">{submitting ? "…" : "↗︎"}</span>
-              </button>
-              <p>DEMO ONLY — NO PAYMENT OR REAL DELIVERY.</p>
-            </div>
-          </form>
         ) : (
           <div className="order-success" aria-live="polite">
-            <span className="order-success-number">74</span>
             <p className="eyebrow">DEMO ORDER / CONFIRMED</p>
             <h3>YOUR GOOD DOG IS BEING OVER-ENGINEERED.</h3>
-            <p>
-              {deliveryMethod === "delivery"
-                ? "Fictional delivery is headed your way."
-                : "Fictional pickup will be ready at Counter 01."}
-            </p>
+            <p>Bag loaded. Dachshund dispatched. Your dog is on the move.</p>
+            <div className="order-courier-track" aria-hidden="true">
+              <span>DACHSHUND DISPATCH</span>
+              <div className="order-courier">
+                <div className="order-courier-rig">
+                  <div className="order-courier-payload">
+                    <img src={item.imageSrc} alt="" />
+                    {item.toppingSrc ? (
+                      <img src={item.toppingSrc} alt="" />
+                    ) : null}
+                  </div>
+                  <span className="order-courier-sprite" />
+                  <span className="order-courier-bag-lid" />
+                </div>
+              </div>
+            </div>
             <button
               className="primary-button"
               type="button"

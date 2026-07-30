@@ -50,9 +50,31 @@ const productAssets: Record<LinkKind, Record<SauceKind, SauceAsset>> = {
 
 const toppingAssets: Record<CrunchKind, string | null> = {
   none: null,
-  onion: "/images/topping-onion-v1-cutout.webp",
+  onion: "/images/topping-onion-v2-cutout.webp",
   herb: "/images/topping-herb-v1-cutout.webp",
 };
+
+export function getBuilderProductImages(
+  link: LinkKind,
+  sauce: SauceKind,
+  crunch: CrunchKind,
+) {
+  return {
+    product: productAssets[link][sauce].end,
+    topping: toppingAssets[crunch],
+  };
+}
+
+export const builderImageSources = Array.from(
+  new Set([
+    ...Object.values(productAssets).flatMap((sauces) =>
+      Object.values(sauces).flatMap(({ start, end }) => [start, end]),
+    ),
+    ...Object.values(toppingAssets).filter(
+      (source): source is string => source !== null,
+    ),
+  ]),
+);
 
 export function BuilderProductMedia({
   link,
@@ -77,6 +99,7 @@ export function BuilderProductMedia({
         src={asset.start}
         alt=""
         decoding="async"
+        fetchPriority="high"
       />
       {asset.clip ? (
         <video
@@ -96,6 +119,7 @@ export function BuilderProductMedia({
           src={asset.end}
           alt=""
           decoding="async"
+          fetchPriority="high"
         />
       )}
       {topping ? (
@@ -105,6 +129,7 @@ export function BuilderProductMedia({
           src={topping}
           alt=""
           decoding="async"
+          fetchPriority="high"
         />
       ) : null}
       <div className="builder-product-glint" />
