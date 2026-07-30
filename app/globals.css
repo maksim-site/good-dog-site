@@ -2948,11 +2948,12 @@ footer > a:last-child {
 }
 
 .order-courier {
+  --courier-distance: 95%;
   position: absolute;
   bottom: -2px;
   left: 0;
   width: 64%;
-  animation: order-courier-route 7200ms cubic-bezier(0.55, 0, 0.28, 1) both;
+  animation: order-courier-route 7200ms linear both;
   will-change: transform;
 }
 
@@ -2960,7 +2961,7 @@ footer > a:last-child {
   position: relative;
   width: 100%;
   aspect-ratio: 585 / 306;
-  animation: dog-weight-shift 1440ms linear 2880ms 3 both;
+  animation: order-courier-bob 720ms linear 2880ms 6 both;
   transform-origin: center bottom;
 }
 
@@ -2975,14 +2976,14 @@ footer > a:last-child {
   background-position: 0 center;
   background-repeat: no-repeat;
   background-size: 400% 100%;
-  animation: order-courier-walk-frames 1440ms linear 2880ms 3 both;
+  animation: order-courier-walk-frames 720ms steps(1, end) 2880ms 6 both;
   will-change: background-position;
 }
 
 .order-courier-bag-lid {
   position: absolute;
   z-index: 4;
-  top: 19%;
+  top: 24.8%;
   left: 34.3%;
   width: 23.6%;
   height: 6.3%;
@@ -2993,6 +2994,7 @@ footer > a:last-child {
     #f3d99e;
   box-shadow: 0 3px 5px rgba(70, 32, 10, 0.12);
   transform-origin: center bottom;
+  transform-style: preserve-3d;
   animation: order-courier-lid 7200ms var(--ease) both;
   will-change: transform;
 }
@@ -3021,16 +3023,12 @@ footer > a:last-child {
 
 @keyframes order-courier-route {
   0%,
-  39% {
+  40% {
     transform: translate3d(0, 0, 0);
     opacity: 1;
   }
-  43% {
-    transform: translate3d(5%, 0, 0);
-    opacity: 1;
-  }
   100% {
-    transform: translate3d(142%, 0, 0);
+    transform: translate3d(var(--courier-distance), 0, 0);
     opacity: 1;
   }
 }
@@ -3038,11 +3036,14 @@ footer > a:last-child {
 @keyframes order-courier-lid {
   0%,
   25% {
-    transform: translateY(-11px) rotate(-3deg) scaleY(0.27);
+    transform: rotateX(72deg) rotateZ(-1deg);
   }
-  34%,
+  31% {
+    transform: rotateX(-8deg) rotateZ(0) scaleY(1.04);
+  }
+  35%,
   100% {
-    transform: translateY(0) rotate(0) scaleY(1);
+    transform: rotateX(0) rotateZ(0) scaleY(1);
   }
 }
 
@@ -3089,6 +3090,22 @@ footer > a:last-child {
   }
   100% {
     background-position-x: 0;
+  }
+}
+
+@keyframes order-courier-bob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
+  25% {
+    transform: translate3d(0, -1.4px, 0) rotate(-0.12deg);
+  }
+  50% {
+    transform: translate3d(0, 0, 0) rotate(0.08deg);
+  }
+  75% {
+    transform: translate3d(0, -1.8px, 0) rotate(-0.14deg);
   }
 }
 
@@ -3755,6 +3772,7 @@ footer > a:last-child {
   }
 
   .order-courier {
+    --courier-distance: 72%;
     bottom: -1px;
     width: 90%;
   }
