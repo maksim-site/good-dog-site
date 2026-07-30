@@ -3214,6 +3214,22 @@ footer > a:last-child {
   }
 }
 
+@media (max-width: 340px) {
+  .hero-spec {
+    left: 88px;
+  }
+
+  .hero-spec strong {
+    font-size: 1.45rem;
+  }
+
+  .hero-action .primary-button {
+    width: 178px;
+    gap: 20px;
+    padding-inline: 19px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
