@@ -20,37 +20,20 @@ export function SauceScrollStage() {
     let frame = 0;
 
     const setProgress = (progress: number) => {
-      const mask = (1 - progress) * 100;
-      const nozzleVisibility =
-        clamp((progress - 0.07) * 8) * clamp((0.92 - progress) * 8);
+      const easedProgress = progress * progress * (3 - 2 * progress);
+      const mask = (1 - easedProgress) * 100;
       const phase =
         progress < 0.2 ? "plain" : progress < 0.78 ? "pour" : "done";
 
       scene.style.setProperty("--sauce-progress", progress.toFixed(4));
       scene.style.setProperty("--sauce-mask", `${mask.toFixed(3)}%`);
       scene.style.setProperty(
-        "--sauce-x",
-        `${(12 + progress * 70).toFixed(3)}vw`,
-      );
-      scene.style.setProperty(
-        "--sauce-y",
-        `${(-32 + Math.sin(progress * Math.PI) * 18).toFixed(3)}px`,
-      );
-      scene.style.setProperty(
         "--sauce-scale",
-        (0.9 + progress * 0.1).toFixed(4),
+        (0.94 + easedProgress * 0.06).toFixed(4),
       );
       scene.style.setProperty(
         "--sauce-rotate",
-        `${(-5.5 + progress * 2.5).toFixed(3)}deg`,
-      );
-      scene.style.setProperty(
-        "--sauce-word-shift",
-        `${(-4 + progress * 8).toFixed(3)}vw`,
-      );
-      scene.style.setProperty(
-        "--nozzle-opacity",
-        nozzleVisibility.toFixed(4),
+        `${(-3.5 + easedProgress * 1.5).toFixed(3)}deg`,
       );
 
       if (scene.dataset.phase !== phase) {
@@ -101,10 +84,6 @@ export function SauceScrollStage() {
           Build the sauce with your scroll
         </h2>
 
-        <p className="sauce-giant-word" aria-hidden="true">
-          SAUCED.
-        </p>
-
         <div className="sauce-product" aria-hidden="true">
           <img
             className="sauce-frame sauce-frame-plain"
@@ -113,13 +92,9 @@ export function SauceScrollStage() {
           />
           <img
             className="sauce-frame sauce-frame-finished"
-            src="/images/sauce-stage-sauced.webp"
+            src="/images/sauce-stage-ketchup.webp"
             alt=""
           />
-          <div className="sauce-nozzle">
-            <span />
-            <i />
-          </div>
           <div className="sauce-stage-steam">
             <i />
             <i />
@@ -127,23 +102,20 @@ export function SauceScrollStage() {
         </div>
 
         <div className="sauce-story-copy" aria-hidden="true">
-          <p className="eyebrow">SCROLL TO SAUCE</p>
+          <p className="eyebrow">THE POUR / 01</p>
           <div className="sauce-story-headline">
-            <span data-step="plain">START CLEAN.</span>
-            <span data-step="pour">DRAW THE LINE.</span>
-            <span data-step="done">THAT&apos;S A GOOD DOG.</span>
+            <span data-step="plain">NOTHING YET.</span>
+            <span data-step="pour">ONE GOOD LINE.</span>
+            <span data-step="done">KETCHUP. ONLY.</span>
           </div>
-          <p className="sauce-story-note">
-            One controlled pour. Zero wrong turns.
-          </p>
         </div>
 
         <div className="sauce-progress" aria-hidden="true">
-          <span>SAUCE LOAD</span>
+          <span>PLAIN</span>
           <i>
             <b />
           </i>
-          <strong>00 — 100</strong>
+          <strong>KETCHUP</strong>
         </div>
       </div>
     </section>
