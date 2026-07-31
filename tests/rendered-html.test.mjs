@@ -59,6 +59,15 @@ test("keeps the mobile builder fixed and ships its production assets", async () 
   assert.match(experience, /const scrollToTop = useCallback/);
   assert.match(experience, /event\.preventDefault\(\)/);
   assert.match(experience, /clearTopHash\(\)/);
+  assert.match(experience, /const navigateFromMenu =/);
+  assert.match(
+    experience,
+    /lenis\.scrollTo\(target,[\s\S]*lock:\s*!reducedMotion/,
+  );
+  assert.match(
+    experience,
+    /onClick=\{\(event\) => navigateFromMenu\(event, href\)\}/,
+  );
   assert.match(experience, /lenis\.scrollTo\(0/);
   assert.match(css, /\.hero\.builder-is-open\s*\{[^}]*height:\s*100dvh/s);
   assert.match(css, /\.builder-is-open \.hero-object\s*\{[^}]*top:\s*23\.5%/s);

@@ -62,7 +62,7 @@ const signatures: Array<{
 ];
 
 const clearTopHash = () => {
-  if (window.location.hash !== "#top") return;
+  if (!window.location.hash) return;
   window.history.replaceState(
     window.history.state,
     "",
@@ -261,16 +261,56 @@ export function GoodDogExperience() {
     setBuilderOpen(true);
   };
 
+  const navigateFromMenu = (
+    event: ReactMouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    event.preventDefault();
+    setMenuOpen(false);
+    menuButtonRef.current?.focus({ preventScroll: true });
+
+    if (href === "#top") {
+      openBuilder();
+      return;
+    }
+
+    const target = document.querySelector<HTMLElement>(href);
+    if (!target) return;
+
+    setBuilderOpen(false);
+    clearTopHash();
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        const lenis = window.__goodDogLenis;
+
+        if (lenis) {
+          lenis.scrollTo(target, {
+            duration: reducedMotion ? 0 : 0.9,
+            immediate: reducedMotion,
+            lock: !reducedMotion,
+            force: true,
+          });
+          return;
+        }
+
+        target.scrollIntoView({
+          behavior: reducedMotion ? "auto" : "smooth",
+          block: "start",
+        });
+      });
+    });
+  };
+
   const applySignature = (signature: (typeof signatures)[number]) => {
     setLink(signature.link);
     setSauce(signature.sauce);
     setCrunch(signature.crunch);
     openBuilder();
-  };
-
-  const closeMenu = () => {
-    setMenuOpen(false);
-    menuButtonRef.current?.focus();
   };
 
   const closeCart = useCallback(() => {
@@ -781,13 +821,7 @@ export function GoodDogExperience() {
               key={href}
               href={href}
               tabIndex={menuOpen ? 0 : -1}
-              onClick={(event) => {
-                if (href === "#top") {
-                  event.preventDefault();
-                  openBuilder();
-                }
-                closeMenu();
-              }}
+              onClick={(event) => navigateFromMenu(event, href)}
             >
               <span>{number}</span>
               <strong>{label}</strong>
