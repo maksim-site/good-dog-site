@@ -2295,334 +2295,207 @@ footer > a:last-child {
   filter: drop-shadow(0 3px 2px rgba(73, 36, 12, 0.14));
 }
 
-.order-wrap-sheet {
+.order-pack-sheet,
+.order-pack-flap,
+.order-pack-label {
   position: absolute;
   pointer-events: none;
-  opacity: 0;
 }
 
-.order-wrap-sheet-back {
-  z-index: 1;
-  inset: 26% 3%;
-  border: 1px solid rgba(33, 26, 22, 0.16);
-  border-radius: 12px 9px 13px 8px;
-  background:
-    linear-gradient(
-      99deg,
-      transparent 0 19%,
-      rgba(89, 54, 29, 0.07) 20%,
-      transparent 22% 67%,
-      rgba(255, 255, 255, 0.22) 69%,
-      transparent 71%
-    ),
-    repeating-linear-gradient(
-      -42deg,
-      rgba(255, 255, 255, 0.38) 0 9px,
-      rgba(211, 47, 38, 0.15) 9px 11px
-    ),
-    #f4dfb5;
-  box-shadow: 0 7px 12px rgba(70, 32, 10, 0.08);
-  opacity: 0;
-  transform: translate3d(-112%, 0, 0);
-}
-
-.order-wrap-fold {
-  position: absolute;
-  z-index: 5;
+.order-pack-sheet,
+.order-pack-flap {
   right: 4%;
   left: 4%;
-  height: 31%;
-  border: 1px solid rgba(33, 26, 22, 0.13);
+  border: 1px solid rgba(78, 43, 22, 0.14);
   background:
     linear-gradient(
-      103deg,
-      transparent 0 23%,
-      rgba(82, 45, 24, 0.08) 24%,
-      transparent 27% 64%,
-      rgba(255, 255, 255, 0.24) 67%,
-      transparent 70%
+      96deg,
+      transparent 0 28%,
+      rgba(89, 54, 29, 0.06) 29%,
+      transparent 31% 70%,
+      rgba(255, 255, 255, 0.25) 72%,
+      transparent 74%
     ),
     repeating-linear-gradient(
       -42deg,
-      rgba(255, 255, 255, 0.3) 0 10px,
-      rgba(211, 47, 38, 0.1) 10px 12px
+      rgba(255, 255, 255, 0.32) 0 10px,
+      rgba(211, 47, 38, 0.11) 10px 12px
     ),
     #f4dfb5;
-  backface-visibility: hidden;
+}
+
+.order-pack-sheet {
+  z-index: 1;
+  top: 18%;
+  bottom: 18%;
+  border-radius: 10px;
+  box-shadow: 0 7px 12px rgba(70, 32, 10, 0.08);
   opacity: 0;
-  pointer-events: none;
+  transform: translate3d(-116%, 0, 0);
+}
+
+.order-pack-flap {
+  z-index: 5;
+  height: 34%;
+  box-shadow: 0 4px 8px rgba(70, 32, 10, 0.06);
+  opacity: 0;
   transform-style: preserve-3d;
 }
 
-.order-wrap-fold::before {
-  position: absolute;
-  inset: 12% 7%;
-  border-radius: 45%;
-  background:
-    linear-gradient(
-      12deg,
-      transparent 36%,
-      rgba(73, 38, 19, 0.09) 38%,
-      transparent 41%
-    ),
-    linear-gradient(
-      -9deg,
-      transparent 57%,
-      rgba(255, 255, 255, 0.22) 59%,
-      transparent 62%
-    );
-  content: "";
-}
-
-.order-wrap-fold-back {
-  top: 23%;
-  border-radius: 12px 12px 5px 5px;
-  clip-path: polygon(1% 0, 99% 0, 99% 100%, 78% 92%, 54% 100%, 28% 92%, 1% 100%);
-  transform-origin: center bottom;
-}
-
-.order-wrap-fold-front {
-  bottom: 23%;
-  border-radius: 5px 5px 12px 12px;
-  clip-path: polygon(1% 0, 27% 8%, 51% 0, 76% 8%, 99% 0, 99% 100%, 1% 100%);
-  transform-origin: center top;
-}
-
-.order-wrap-crimp {
-  position: absolute;
-  z-index: 6;
-  top: 24%;
-  bottom: 24%;
-  width: 22%;
-  overflow: hidden;
-  border: 1px solid rgba(33, 26, 22, 0.13);
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.28), transparent 48%),
-    repeating-linear-gradient(
-      -42deg,
-      rgba(255, 255, 255, 0.3) 0 10px,
-      rgba(211, 47, 38, 0.1) 10px 12px
-    ),
-    #f4dfb5;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.order-wrap-crimp-left {
-  left: 1%;
-  border-radius: 48% 10px 10px 48%;
-  clip-path: polygon(0 50%, 18% 9%, 100% 18%, 92% 50%, 100% 82%, 18% 91%);
-  transform-origin: right center;
-}
-
-.order-wrap-crimp-right {
-  right: 1%;
-  border-radius: 10px 48% 48% 10px;
-  clip-path: polygon(0 18%, 82% 9%, 100% 50%, 82% 91%, 0 82%, 8% 50%);
-  transform-origin: left center;
-}
-
-.order-wrap-crimp i {
-  position: absolute;
+.order-pack-flap-back {
   top: 18%;
+  border-radius: 10px 10px 3px 3px;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 100%,
+    84% 97%,
+    68% 100%,
+    51% 96%,
+    33% 100%,
+    15% 97%,
+    0 100%
+  );
+  transform: translate3d(0, -82%, 0) rotateX(-76deg) scaleY(0.62);
+  transform-origin: 50% 100%;
+}
+
+.order-pack-flap-front {
   bottom: 18%;
-  width: 1px;
-  background: rgba(83, 45, 24, 0.16);
-  transform: rotate(13deg);
+  border-radius: 3px 3px 10px 10px;
+  clip-path: polygon(
+    0 0,
+    15% 3%,
+    33% 0,
+    51% 4%,
+    68% 0,
+    84% 3%,
+    100% 0,
+    100% 100%,
+    0 100%
+  );
+  transform: translate3d(0, 82%, 0) rotateX(76deg) scaleY(0.62);
+  transform-origin: 50% 0;
 }
 
-.order-wrap-crimp i:nth-child(1) {
-  left: 31%;
-}
-
-.order-wrap-crimp i:nth-child(2) {
-  left: 51%;
-  transform: rotate(-8deg);
-}
-
-.order-wrap-crimp i:nth-child(3) {
-  left: 70%;
-  transform: rotate(17deg);
-}
-
-.order-wrap-sticker {
-  position: absolute;
+.order-pack-label {
   z-index: 6;
-  top: 38%;
-  left: 26%;
+  top: 39%;
+  left: 27%;
   display: grid;
-  width: 48%;
-  height: 24%;
+  width: 46%;
+  height: 22%;
   place-content: center;
-  border: 1px solid rgba(33, 26, 22, 0.2);
-  border-radius: 7px;
-  background: #f7e9c9;
-  color: var(--ink);
-  box-shadow: 0 5px 9px rgba(70, 32, 10, 0.11);
+  border: 1px solid rgba(33, 26, 22, 0.19);
+  border-radius: 6px;
+  background: #f8edcf;
+  box-shadow: 0 4px 8px rgba(70, 32, 10, 0.1);
   opacity: 0;
   text-align: center;
-  transform: scale(0.5) rotate(-7deg);
+  transform: translate3d(0, -5px, 0) scale(0.94);
 }
 
-.order-wrap-sticker b {
+.order-pack-label b {
   font-family: var(--display);
-  font-size: 12px;
-  letter-spacing: -0.03em;
+  font-size: 11px;
+  letter-spacing: -0.025em;
 }
 
-.order-wrap-sticker small {
-  margin-top: 2px;
+.order-pack-label small {
+  margin-top: 1px;
   font-size: 5px;
-  font-weight: 750;
-  letter-spacing: 0.12em;
+  font-weight: 760;
+  letter-spacing: 0.1em;
 }
 
 .order-product-image.is-packing .order-product-stack {
-  animation: order-hotdog-pack 3000ms var(--ease) both;
+  animation: order-pack-hotdog 3600ms var(--ease) both;
 }
 
-.order-product-image.is-packing .order-wrap-sheet-back {
-  animation: order-wrap-back 3000ms var(--ease) both;
+.order-product-image.is-packing .order-pack-sheet {
+  animation: order-pack-sheet-in 3600ms var(--ease) both;
 }
 
-.order-product-image.is-packing .order-wrap-fold-back {
-  animation: order-wrap-fold-back 3000ms var(--ease) both;
+.order-product-image.is-packing .order-pack-flap-back {
+  animation: order-pack-fold-back 3600ms var(--ease) both;
 }
 
-.order-product-image.is-packing .order-wrap-fold-front {
-  animation: order-wrap-fold-front 3000ms var(--ease) both;
+.order-product-image.is-packing .order-pack-flap-front {
+  animation: order-pack-fold-front 3600ms var(--ease) both;
 }
 
-.order-product-image.is-packing .order-wrap-crimp-left {
-  animation: order-wrap-crimp-left 3000ms var(--ease) both;
+.order-product-image.is-packing .order-pack-label {
+  animation: order-pack-label-in 3600ms var(--ease) both;
 }
 
-.order-product-image.is-packing .order-wrap-crimp-right {
-  animation: order-wrap-crimp-right 3000ms var(--ease) both;
-}
-
-.order-product-image.is-packing .order-wrap-sticker {
-  animation: order-wrap-sticker 3000ms var(--ease) both;
-}
-
-@keyframes order-hotdog-pack {
+@keyframes order-pack-hotdog {
   0%,
-  22% {
-    transform: translate3d(-7%, -5px, 0) scale(1);
+  8% {
+    transform: translate3d(-7%, -5px, 0) rotate(0) scale(1);
     opacity: 1;
   }
-  47% {
-    transform: translate3d(-5%, -2px, 0) scale(0.91);
-    opacity: 1;
-  }
-  72% {
-    transform: translate3d(-2%, 1px, 0) scale(0.78);
-    opacity: 0.22;
-  }
+  30%,
   100% {
-    transform: translate3d(0, 1px, 0) scale(0.74);
+    transform: translate3d(0, 0, 0) rotate(4deg) scale(0.9);
+    opacity: 1;
+  }
+}
+
+@keyframes order-pack-sheet-in {
+  0%,
+  5% {
+    transform: translate3d(-116%, 0, 0);
     opacity: 0;
   }
-}
-
-@keyframes order-wrap-back {
-  0%,
-  7% {
-    transform: translate3d(-112%, 8px, 0) scaleX(0.94);
-    opacity: 0;
-  }
-  29% {
-    transform: translate3d(0, 1px, 0) scaleX(1.01);
-    opacity: 1;
-  }
-  48% {
-    transform: translate3d(0, 1px, 0) scaleX(0.98);
-    opacity: 1;
-  }
+  28%,
   100% {
-    transform: translate3d(0, 1px, 0) scaleX(0.94);
+    transform: translate3d(0, 0, 0);
     opacity: 1;
   }
 }
 
-@keyframes order-wrap-fold-back {
-  0%,
-  28% {
-    transform: translate3d(-52%, -28%, 0) rotateX(82deg) scaleY(0.58);
-    opacity: 0;
-  }
-  55% {
-    transform: translate3d(1%, 1%, 0) rotateX(9deg) scaleY(1.04);
-    opacity: 1;
-  }
-  68%,
-  100% {
-    transform: translate3d(0, 0, 0) rotateX(0) scaleY(1);
-    opacity: 1;
-  }
-}
-
-@keyframes order-wrap-fold-front {
+@keyframes order-pack-fold-back {
   0%,
   31% {
-    transform: translate3d(-34%, 28%, 0) rotateX(-82deg) scaleY(0.6);
+    transform: translate3d(0, -82%, 0) rotateX(-76deg) scaleY(0.62);
     opacity: 0;
   }
-  58% {
-    transform: translate3d(0, -1%, 0) rotateX(-8deg) scaleY(1.04);
+  38% {
     opacity: 1;
   }
-  69%,
+  60%,
   100% {
     transform: translate3d(0, 0, 0) rotateX(0) scaleY(1);
     opacity: 1;
   }
 }
 
-@keyframes order-wrap-crimp-left {
+@keyframes order-pack-fold-front {
   0%,
-  52% {
-    transform: translate3d(24%, 0, 0) scaleX(0.18);
+  49% {
+    transform: translate3d(0, 82%, 0) rotateX(76deg) scaleY(0.62);
     opacity: 0;
   }
-  73% {
-    transform: translate3d(0, 0, 0) scaleX(1.06);
+  56% {
     opacity: 1;
   }
-  82%,
+  78%,
   100% {
-    transform: translate3d(0, 0, 0) scaleX(1);
+    transform: translate3d(0, 0, 0) rotateX(0) scaleY(1);
     opacity: 1;
   }
 }
 
-@keyframes order-wrap-crimp-right {
+@keyframes order-pack-label-in {
   0%,
-  52% {
-    transform: translate3d(-24%, 0, 0) scaleX(0.18);
+  81% {
+    transform: translate3d(0, -5px, 0) scale(0.94);
     opacity: 0;
   }
-  73% {
-    transform: translate3d(0, 0, 0) scaleX(1.06);
-    opacity: 1;
-  }
-  82%,
+  94%,
   100% {
-    transform: translate3d(0, 0, 0) scaleX(1);
+    transform: translate3d(0, 0, 0) scale(1);
     opacity: 1;
-  }
-}
-
-@keyframes order-wrap-sticker {
-  0%,
-  79% {
-    opacity: 0;
-    transform: translateY(-5px) scale(0.58) rotate(-6deg);
-  }
-  93%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 
@@ -2921,7 +2794,7 @@ footer > a:last-child {
 
 .order-success {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .order-success > * {
@@ -2931,6 +2804,7 @@ footer > a:last-child {
 
 .order-courier-track {
   position: relative;
+  flex: 0 0 212px;
   width: 100%;
   height: 212px;
   overflow: hidden;
@@ -2948,20 +2822,20 @@ footer > a:last-child {
 }
 
 .order-courier {
-  --courier-distance: 95%;
+  --courier-distance: 165%;
   position: absolute;
   bottom: -2px;
   left: 0;
   width: 64%;
-  animation: order-courier-route 7200ms linear both;
+  animation: order-courier-route 5400ms linear 2800ms both;
   will-change: transform;
 }
 
 .order-courier-rig {
   position: relative;
   width: 100%;
-  aspect-ratio: 585 / 306;
-  animation: order-courier-bob 720ms linear 2880ms 6 both;
+  aspect-ratio: 580 / 320;
+  animation: order-courier-bob 900ms linear 2800ms 6 both;
   transform-origin: center bottom;
 }
 
@@ -2976,37 +2850,36 @@ footer > a:last-child {
   background-position: 0 center;
   background-repeat: no-repeat;
   background-size: 400% 100%;
-  animation: order-courier-walk-frames 720ms steps(1, end) 2880ms 6 both;
-  will-change: background-position;
+  animation: order-courier-walk-frames 900ms steps(1, end) 2800ms 6 both;
+  will-change: background-position, transform;
 }
 
 .order-courier-bag-lid {
   position: absolute;
-  z-index: 4;
-  top: 24.8%;
-  left: 34.3%;
-  width: 23.6%;
-  height: 6.3%;
+  z-index: 5;
+  top: 28.2%;
+  left: 34.85%;
+  width: 23%;
+  height: 5.3%;
   border: 1px solid #9d4d2f;
-  border-radius: 999px 999px 5px 5px;
+  border-radius: 14px 14px 4px 4px;
   background:
     linear-gradient(180deg, rgba(255, 250, 226, 0.5), transparent 48%),
     #f3d99e;
-  box-shadow: 0 3px 5px rgba(70, 32, 10, 0.12);
-  transform-origin: center bottom;
-  transform-style: preserve-3d;
-  animation: order-courier-lid 7200ms var(--ease) both;
+  box-shadow: 0 1px 3px rgba(70, 32, 10, 0.1);
+  transform-origin: 50% 100%;
+  animation: order-courier-lid 2800ms var(--ease) both;
   will-change: transform;
 }
 
 .order-courier-payload {
   position: absolute;
-  z-index: 2;
-  top: -4%;
-  left: 35.3%;
-  width: 21.8%;
-  height: 19.5%;
-  animation: order-courier-hotdog-drop 7200ms var(--ease) both;
+  z-index: 4;
+  top: -8%;
+  left: 31.5%;
+  width: 30%;
+  height: 24%;
+  animation: order-courier-hotdog-drop 2800ms var(--ease) both;
   transform-origin: center;
   will-change: transform, opacity;
 }
@@ -3022,12 +2895,11 @@ footer > a:last-child {
 }
 
 @keyframes order-courier-route {
-  0%,
-  40% {
+  from {
     transform: translate3d(0, 0, 0);
     opacity: 1;
   }
-  100% {
+  to {
     transform: translate3d(var(--courier-distance), 0, 0);
     opacity: 1;
   }
@@ -3035,38 +2907,38 @@ footer > a:last-child {
 
 @keyframes order-courier-lid {
   0%,
-  25% {
-    transform: rotateX(72deg) rotateZ(-1deg);
+  68% {
+    transform: perspective(160px) rotateX(76deg);
   }
-  31% {
-    transform: rotateX(-8deg) rotateZ(0) scaleY(1.04);
+  84% {
+    transform: perspective(160px) rotateX(-3deg) scaleY(1.008);
   }
-  35%,
+  92%,
   100% {
-    transform: rotateX(0) rotateZ(0) scaleY(1);
+    transform: perspective(160px) rotateX(0) scaleY(1);
   }
 }
 
 @keyframes order-courier-hotdog-drop {
   0%,
-  8% {
-    transform: translate3d(0, -90%, 0) rotate(-8deg) scale(0.98);
+  9% {
+    transform: translate3d(0, -92%, 0) rotate(-7deg) scale(0.98);
     opacity: 0;
   }
-  11% {
+  16% {
     opacity: 1;
   }
-  23% {
-    transform: translate3d(0, 66%, 0) rotate(1deg) scale(0.82);
+  60% {
+    transform: translate3d(0, 85%, 0) rotate(0) scale(0.72);
     opacity: 1;
   }
-  28% {
-    transform: translate3d(0, 106%, 0) rotate(0) scale(0.64);
+  68% {
+    transform: translate3d(0, 145%, 0) rotate(0) scale(0.58);
     opacity: 1;
   }
-  32%,
+  72%,
   100% {
-    transform: translate3d(0, 106%, 0) rotate(0) scale(0.64);
+    transform: translate3d(0, 145%, 0) rotate(0) scale(0.58);
     opacity: 0;
   }
 }
@@ -3075,21 +2947,26 @@ footer > a:last-child {
   0%,
   24.99% {
     background-position-x: 0;
+    transform: translate3d(0, 0, 0);
   }
   25%,
   49.99% {
     background-position-x: 33.333%;
+    transform: translate3d(1.034%, 0, 0);
   }
   50%,
   74.99% {
     background-position-x: 66.667%;
+    transform: translate3d(0.69%, 0, 0);
   }
   75%,
   99.99% {
     background-position-x: 100%;
+    transform: translate3d(1.552%, 0, 0);
   }
   100% {
     background-position-x: 0;
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -3768,11 +3645,12 @@ footer > a:last-child {
   }
 
   .order-courier-track {
+    flex-basis: 176px;
     height: 176px;
   }
 
   .order-courier {
-    --courier-distance: 72%;
+    --courier-distance: 116%;
     bottom: -1px;
     width: 90%;
   }

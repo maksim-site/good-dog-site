@@ -26,7 +26,7 @@ type OrderDrawerProps = {
 
 type OrderStep = "cart" | "success";
 
-const PACKING_DURATION = 3000;
+const PACKING_DURATION = 3600;
 
 const formatMoney = (value: number) => `$${value.toFixed(0)}`;
 
@@ -154,7 +154,7 @@ export function OrderDrawer({
                   packing ? "is-packing" : ""
                 }`}
               >
-                <span className="order-wrap-sheet order-wrap-sheet-back" />
+                <span className="order-pack-sheet" />
                 <div className="order-product-stack">
                   <img
                     src={item.imageSrc}
@@ -168,21 +168,11 @@ export function OrderDrawer({
                     />
                   ) : null}
                 </div>
-                <span className="order-wrap-fold order-wrap-fold-back" />
-                <span className="order-wrap-fold order-wrap-fold-front" />
-                <span className="order-wrap-crimp order-wrap-crimp-left">
-                  <i />
-                  <i />
-                  <i />
-                </span>
-                <span className="order-wrap-crimp order-wrap-crimp-right">
-                  <i />
-                  <i />
-                  <i />
-                </span>
-                <span className="order-wrap-sticker">
+                <span className="order-pack-flap order-pack-flap-back" />
+                <span className="order-pack-flap order-pack-flap-front" />
+                <span className="order-pack-label">
                   <b>GOOD DOG</b>
-                  <small>SEALED HOT</small>
+                  <small>PACKED AT 74°</small>
                 </span>
               </div>
               <div className="order-product-copy">
@@ -228,7 +218,7 @@ export function OrderDrawer({
                 onClick={packAndOrder}
                 disabled={packing}
               >
-                <span>{packing ? "WRAPPING YOUR DOG…" : "ORDER THIS DOG"}</span>
+                <span>{packing ? "PACKING YOUR DOG…" : "ORDER THIS DOG"}</span>
                 <span aria-hidden="true">{packing ? "…" : "→"}</span>
               </button>
               <p>DEMO CHECKOUT — NO PAYMENT WILL BE TAKEN.</p>
