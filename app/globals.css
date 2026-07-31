@@ -3790,9 +3790,15 @@ footer > a:last-child {
   }
 
   .menu-overlay nav a {
-    grid-template-columns: 42px 1fr auto;
+    grid-template-columns: 34px minmax(0, 1fr) 18px;
+    column-gap: 2px;
     padding: 15px 0;
-    font-size: clamp(2.7rem, 13.5vw, 4.5rem);
+    font-size: clamp(2.1rem, 10.5vw, 3.8rem);
+  }
+
+  .menu-overlay nav a i {
+    justify-self: end;
+    font-size: 18px;
   }
 
   .menu-foot {
