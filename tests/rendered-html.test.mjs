@@ -48,7 +48,10 @@ test("keeps the mobile builder fixed and ships its production assets", async () 
 
   assert.match(experience, /document\.body\.style\.position = "fixed"/);
   assert.match(experience, /document\.documentElement\.style\.overflow = "hidden"/);
-  assert.match(experience, /window\.__goodDogLenis\?\.scrollTo\(0/);
+  assert.match(experience, /const scrollToTop = useCallback/);
+  assert.match(experience, /event\.preventDefault\(\)/);
+  assert.match(experience, /clearTopHash\(\)/);
+  assert.match(experience, /lenis\.scrollTo\(0/);
   assert.match(css, /\.hero\.builder-is-open\s*\{[^}]*height:\s*100dvh/s);
   assert.match(css, /\.builder-is-open \.hero-object\s*\{[^}]*top:\s*23\.5%/s);
   assert.match(css, /\.builder-panel\s*\{[^}]*overflow:\s*hidden/s);

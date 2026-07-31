@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  MouseEvent as ReactMouseEvent,
   useCallback,
   useEffect,
   useMemo,
@@ -59,6 +60,15 @@ const signatures: Array<{
     crunch: "herb",
   },
 ];
+
+const clearTopHash = () => {
+  if (window.location.hash !== "#top") return;
+  window.history.replaceState(
+    window.history.state,
+    "",
+    `${window.location.pathname}${window.location.search}`,
+  );
+};
 
 export function GoodDogExperience() {
   const [introOpen, setIntroOpen] = useState(true);
@@ -193,9 +203,43 @@ export function GoodDogExperience() {
     setLink(links[next].id);
   };
 
+  const scrollToTop = useCallback(
+    (event: ReactMouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
+      clearTopHash();
+
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      const lenis = window.__goodDogLenis;
+
+      if (lenis) {
+        lenis.scrollTo(0, {
+          duration: reducedMotion ? 0 : 0.9,
+          immediate: reducedMotion,
+          lock: !reducedMotion,
+          force: true,
+        });
+        return;
+      }
+
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: reducedMotion ? "auto" : "smooth",
+      });
+    },
+    [],
+  );
+
   const openBuilder = () => {
-    window.__goodDogLenis?.scrollTo(0, { immediate: true });
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    clearTopHash();
+    const lenis = window.__goodDogLenis;
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true, force: true });
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
     setBuilderOpen(true);
   };
 
@@ -295,7 +339,12 @@ export function GoodDogExperience() {
         className={`hero ${builderOpen ? "builder-is-open" : ""}`}
       >
         <header className="top-layer">
-          <a className="brand-logo" href="#top" aria-label="GOOD DOG home">
+          <a
+            className="brand-logo"
+            href="#top"
+            aria-label="GOOD DOG home"
+            onClick={scrollToTop}
+          >
             <img src="/brand/good-dog-logo.png" alt="GOOD DOG" />
           </a>
           <div className="top-actions">
@@ -658,7 +707,12 @@ export function GoodDogExperience() {
       </section>
 
       <footer>
-        <a className="footer-brand" href="#top" aria-label="GOOD DOG home">
+        <a
+          className="footer-brand"
+          href="#top"
+          aria-label="GOOD DOG home"
+          onClick={scrollToTop}
+        >
           <img src="/brand/good-dog-logo.png" alt="GOOD DOG" />
         </a>
         <a
@@ -670,7 +724,9 @@ export function GoodDogExperience() {
           <span>DESIGNED &amp; BUILT BY MAKSIM</span>
           <small>MAKSIM-SITE.RU ↗︎</small>
         </a>
-        <a href="#top">BACK TO TOP ↑</a>
+        <a href="#top" onClick={scrollToTop}>
+          BACK TO TOP ↑
+        </a>
       </footer>
 
       {cartOpen ? (
@@ -715,9 +771,12 @@ export function GoodDogExperience() {
               key={href}
               href={href}
               tabIndex={menuOpen ? 0 : -1}
-              onClick={() => {
+              onClick={(event) => {
+                if (href === "#top") {
+                  event.preventDefault();
+                  openBuilder();
+                }
                 closeMenu();
-                if (href === "#top") setBuilderOpen(true);
               }}
             >
               <span>{number}</span>
