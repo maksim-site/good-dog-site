@@ -31,6 +31,14 @@ test("server-renders the GOOD DOG experience", async () => {
   const html = await response.text();
   assert.match(html, /<title>GOOD DOG — Built Different<\/title>/i);
   assert.match(html, /A playful hot dog builder and demo ordering experience/);
+  assert.match(
+    html,
+    /<meta property="og:image" content="https:\/\/good-dog\.site\/icon\.png"/i,
+  );
+  assert.match(
+    html,
+    /<meta property="og:site_name" content="GOOD DOG"/i,
+  );
   assert.match(html, /aria-label="Built different"/);
   assert.match(html, /BUILD YOURS/);
   assert.match(html, /HOT DOGS, REPROGRAMMED/);
@@ -55,6 +63,18 @@ test("keeps the mobile builder fixed and ships its production assets", async () 
   assert.match(css, /\.hero\.builder-is-open\s*\{[^}]*height:\s*100dvh/s);
   assert.match(css, /\.builder-is-open \.hero-object\s*\{[^}]*top:\s*23\.5%/s);
   assert.match(css, /\.builder-panel\s*\{[^}]*overflow:\s*hidden/s);
+  assert.match(
+    css,
+    /\.order-courier-track\s*\{[^}]*--courier-departure-delay:\s*2800ms/s,
+  );
+  assert.match(
+    css,
+    /\.order-courier-sprite\s*\{[^}]*var\(--courier-departure-delay\)[^}]*8[^}]*forwards/s,
+  );
+  assert.match(
+    css,
+    /@keyframes order-courier-walk-frames\s*\{\s*0%,\s*24\.99%\s*\{[^}]*background-position-x:\s*33\.333%/s,
+  );
   assert.match(builder, /topping-onion-v2-cutout\.webp/);
   assert.match(builder, /topping-herb-v1-cutout\.webp/);
 

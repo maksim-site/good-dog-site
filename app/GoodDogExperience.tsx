@@ -81,8 +81,8 @@ export function GoodDogExperience() {
   const [cartItem, setCartItem] = useState<OrderItem | null>(null);
   const [cartQuantity, setCartQuantity] = useState(0);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuPopoverRef = useRef<HTMLDivElement>(null);
   const cartButtonRef = useRef<HTMLButtonElement>(null);
-  const closeMenuRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const preloadedImages: HTMLImageElement[] = [];
@@ -143,9 +143,12 @@ export function GoodDogExperience() {
 
   useEffect(() => {
     if (!menuOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    closeMenuRef.current?.focus();
+
+    const focusFrame = window.requestAnimationFrame(() => {
+      menuPopoverRef.current
+        ?.querySelector<HTMLAnchorElement>("a")
+        ?.focus();
+    });
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -153,10 +156,25 @@ export function GoodDogExperience() {
         menuButtonRef.current?.focus();
       }
     };
+
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (
+        menuPopoverRef.current?.contains(target) ||
+        menuButtonRef.current?.contains(target)
+      ) {
+        return;
+      }
+      setMenuOpen(false);
+    };
+
     window.addEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+
     return () => {
-      document.body.style.overflow = previousOverflow;
+      window.cancelAnimationFrame(focusFrame);
       window.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
     };
   }, [menuOpen]);
 
@@ -363,9 +381,10 @@ export function GoodDogExperience() {
               type="button"
               aria-expanded={menuOpen}
               aria-controls="site-menu"
+              aria-haspopup="menu"
               onClick={() => {
                 setCartOpen(false);
-                setMenuOpen(true);
+                setMenuOpen((current) => !current);
               }}
             >
               <span>MENU</span>
@@ -741,24 +760,15 @@ export function GoodDogExperience() {
       ) : null}
 
       <div
+        ref={menuPopoverRef}
         id="site-menu"
-        className={`menu-overlay ${menuOpen ? "is-open" : ""}`}
-        role="dialog"
-        aria-modal="true"
+        className={`menu-popover ${menuOpen ? "is-open" : ""}`}
         aria-label="Site menu"
         aria-hidden={!menuOpen}
       >
-        <div className="menu-overlay-head">
-          <span className="wordmark light">GOOD DOG</span>
-          <button
-            ref={closeMenuRef}
-            type="button"
-            className="menu-close"
-            onClick={closeMenu}
-            tabIndex={menuOpen ? 0 : -1}
-          >
-            CLOSE <span aria-hidden="true">×</span>
-          </button>
+        <div className="menu-popover-meta" aria-hidden="true">
+          <span>GOOD DOG / MENU</span>
+          <span>2026</span>
         </div>
         <nav aria-label="Main navigation">
           {[
@@ -780,7 +790,7 @@ export function GoodDogExperience() {
               }}
             >
               <span>{number}</span>
-              {label}
+              <strong>{label}</strong>
               <i aria-hidden="true">↗︎</i>
             </a>
           ))}
